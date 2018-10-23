@@ -56,5 +56,4 @@ class Corpus:
                     cp_copy[i+1], cp_copy[i] = cp_copy[i], cp_copy[i+1]
                     document_source[i+1], document_source[i] = document_source[i], document_source[i+1]
                     ordenado = False
-        print(document_source)
         return document_source
