@@ -37,10 +37,12 @@ class Corpus:
     def list_document_susp(self):
         return self.__list_document_susp
     def verificarPlagio(self, document):
-        limiar = 0.5
+        limiar = 0.6
         cp_copy = []
         document_source = []
+        document.gerarNGrams(2)
         for x in range(len(self.__list_document_src)):
+            self.__list_document_src[x].gerarNGrams(2)
             cp = document.contencao(self.__list_document_src[x])
             if cp > limiar:
                 cp_copy.append(cp)
