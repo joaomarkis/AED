@@ -10,8 +10,6 @@ class Documento:
         self.__texto = arquivo.read()
         self.__texto = "".join(x for x in self.__texto if x not in string.punctuation)
         self.__lista_np = np.array(self.__texto)
-        if self.__lista == None:
-            self.gerarNGrams(2)
         arquivo.close()
         
     @property
