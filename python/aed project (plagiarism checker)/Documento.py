@@ -34,7 +34,6 @@ class Documento:
     def contencao(self, documento):
         cp = 0
         for x in range(len(self.lista)):
-            print(self.lista.__getitem__(x))
             for i in range(len(documento.lista)):
                 if self.lista.__getitem__(x).termo == documento.lista.__getitem__(i).termo:
                     cp +=1
