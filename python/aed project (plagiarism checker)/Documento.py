@@ -31,10 +31,9 @@ class Documento:
                 self.__lista.anexar(NGram(lista_termos[x], n))
     def contencao(self, documento):
         cp = 0
-        for x in range(len(self.lista)):
-            for i in range(len(documento.lista)):
-                if self.lista.__getitem__(x).termo == documento.lista.__getitem__(i).termo:
+        for x in self.lista:
+            for i in (documento.lista):
+                if x.termo == i.termo:
                     cp +=1
-                    break
-        cp = cp/len(self.lista)
+        cp = cp/len(self.__lista)
         return cp
