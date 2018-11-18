@@ -1,4 +1,3 @@
-import numpy as np
 """""
 Universidade Federal de Pernambuco - UFPE
 Centro de Informática - CIn
@@ -9,6 +8,9 @@ E-mail: jvms@cin.ufpe.br
 
                        Copyright(c) 2018 João Victor Marques dos Santos
 """""
+
+
+import numpy as np
 
 class GrafoLista:
     def __init__(self, grupo, direcionado=False):
