@@ -2,8 +2,12 @@ import numpy as np
 
 class GrafoLista:
     def __init__(self, grupo, direcionado=False):
+        self.__typegraph = 1
         self.__V = []
+        self.__weight = False
         for x in grupo:
+            if len(grupo)>2:
+                self.__weight = True
             if x[0] not in self.__V:
                 self.__V.append(x[0])
             elif x[1] not in self.__V:
@@ -13,11 +17,17 @@ class GrafoLista:
         self.__direcionado = direcionado
         for i in grupo:
             self.inserirAresta(i)
-
-    #Retorna o número de vertices
+    @property
+    def weight(self):
+        return self.__weight
+    @property
+    def typegraph(self):
+        return self.__typegraph
+    @property
     def V(self):
         return len(self.__V)
     #Retorna o número de arestas
+    @property
     def E(self):
         return self.__E
     #Adiciona as arestas para conectar os vértices
@@ -36,8 +46,9 @@ class GrafoLista:
             else:
                 self.__listaAdjacencias[tuplex[0]].append(tuplex[1])
                 self.__listaAdjacencias[tuplex[1]].append(tuplex[0])
-
-    #Retorna uma lista com os vertices adjacentes a X
+    @property
+    def listaadj(self):
+        return self.__listaAdjacencias
     def adj(self, x):
         return self.__listaAdjacencias[x]
     def transformGrafo(self):
@@ -79,7 +90,6 @@ class GrafoLista:
                             count+=1
         except:
             for x in range(len(self.__listaAdjacencias)):
-                print(self.__listaAdjacencias[x])
                 if x == vertice:
                     continue
                 elif vertice in self.__listaAdjacencias[x]:
@@ -136,6 +146,7 @@ class GrafoLista:
 class GrafoMatriz:
     def __init__(self, grupo, direcionado=False):
         self.__V = []
+        self.__typegraph = 0
         for x in grupo:
             if x[0] not in self.__V:
                 self.__V.append(x[0])
@@ -148,16 +159,20 @@ class GrafoMatriz:
         self.__direcionado = direcionado
         for i in grupo:
             self.inserirAresta(i)
-        self.str_vers = str(grupo)
     @property
     def matriz(self):
         return self.__matrizAdjacencias
     #Retorna o número de vertices
+    @property
     def V(self):
         return len(self.__V)
     #Retorna o número de arestas
+    @property
     def E(self):
         return self.__E
+    @property
+    def typegraph(self):
+        return self.__typegraph
     #Adiciona as arestas para conectar os vértices
     def inserirAresta(self, tuplex):
         self.__E += 1
@@ -180,7 +195,6 @@ class GrafoMatriz:
         for x in range(len(matriz_copia)):
             for y in range(len(matriz_copia)):
                 if int(matriz_copia[x][y]) == 1:
-                    print("dale")
                     if int(matriz_copia[y][x]) == 1:
                         aux.append((x,y))
                         matriz_copia[x][y] = 0
@@ -189,7 +203,6 @@ class GrafoMatriz:
                         aux.append((x,y))
                         matriz_copia[x][y] = 0
                 elif int(matriz_copia[x][y]) >1:
-                    print("oi")
                     if int(matriz_copia[y][x]) >1:
                         aux.append((x,y, matriz_copia[x][y]))
                         matriz_copia[x][y] = 0
@@ -200,12 +213,10 @@ class GrafoMatriz:
                 else:
                     pass
         del matriz_copia
-        print(aux)
         aux = tuple(aux)
         return GrafoLista(aux, self.__direcionado)
     def indegree(self, vert):
         count = 0
-        print(self.__matrizAdjacencias)
         for x in range(len(self.__matrizAdjacencias)):
             if x == vert:
                 continue
@@ -216,29 +227,30 @@ class GrafoMatriz:
         return count
     def outdegree(self, vert):
         count = 0
-        print(self.__matrizAdjacencias)
         for x in range(len(self.__matrizAdjacencias)):
             if self.__matrizAdjacencias[vert][x] >0:
                 count+=1
         return count
-    def dfs(self,vert):
-        matriz_copia = np.array(self.__matrizAdjacencias)
-        aux = vert
-        visit = [False]*len(self.__V)
+
+def dfs(graph):
+    status = graph.typegraph
+    if status == 0:
+        matriz_copia = np.array(graph.matriz)
+        aux = 0
+        visit = [False] * graph.V
         boolean = True
         vert_ant = []
         antecessor = 0
         adj = 0
         while boolean:
             count = 0
-            print(matriz_copia)
             if not visit[aux]:
                 visit[aux] = True
                 if aux not in vert_ant:
                     vert_ant.append(aux)
                 for x in range(len(matriz_copia)):
-                    if matriz_copia[aux][x] >0:
-                        count +=1
+                    if matriz_copia[aux][x] > 0:
+                        count += 1
                         adj = x
                         matriz_copia[aux][x] = -1
                 if count == 0:
@@ -247,8 +259,118 @@ class GrafoMatriz:
                     antecessor = aux
                     aux = adj
             else:
-                antecessor -=1
+                antecessor -= 1
                 aux = antecessor
             if antecessor == -1:
                 boolean = False
                 return vert_ant
+    else:
+        listaadj = graph.listaadj
+        print(listaadj)
+        aux = 0
+        size = graph.V
+
+        visit = [False] * size
+        boolean = True
+        vert_ant = []
+        antecessor = 0
+        adj = 0
+        if graph.weight:
+            while boolean:
+                count = 0
+                print(aux)
+                if not visit[aux]:
+                    visit[aux] = True
+                    if aux not in vert_ant:
+                        vert_ant.append(aux)
+                    for x in range(len(listaadj[aux])):
+                        count += 1
+                        adj = listaadj[aux][x][0]
+                    antecessor = aux
+                    aux = adj
+                else:
+                    antecessor -= 1
+                    aux = antecessor
+                if antecessor == -1:
+                    boolean = False
+                    return vert_ant
+        else:
+            while boolean:
+                count = 0
+                print(aux)
+                if not visit[aux]:
+                    visit[aux] = True
+                    if aux not in vert_ant:
+                        vert_ant.append(aux)
+                    for x in range(len(listaadj[aux])):
+                        count += 1
+                        adj = listaadj[aux][x]
+                    antecessor = aux
+                    aux = adj
+                else:
+                    antecessor -= 1
+                    aux = antecessor
+                if antecessor == -1:
+                    boolean = False
+                    return vert_ant
+def bfs(graph, vert):
+    status = graph.typegraph
+    if status == 0:
+        boolean = True
+        count = 0
+        visit = [False]*graph.V
+        vert_ant = []
+        try:
+            while boolean:
+                if not visit[count]:
+                    visit[count] = True
+                    if count not in vert_ant:
+                        vert_ant.append(count)
+                    for x in range(len(graph.matriz)):
+                        if graph.matriz[count][x] >0:
+                            if x == vert:
+                                boolean = False
+                else:
+                    count +=1
+        except:
+            raise KeyError
+        return vert_ant
+    else:
+        listaadj = graph.listaadj
+        size = graph.V
+        visit = [False] * size
+        boolean = True
+        vert_ant = []
+        antecessor = 0
+        adj = 0
+        count = 0
+        if graph.weight:
+            try:
+                while boolean:
+                    if not visit[count]:
+                        visit[count] = True
+                        if count not in vert_ant:
+                            vert_ant.append(count)
+                        for x in range(len(listaadj[count])):
+                            if listaadj[count][x][0] == vert:
+                                boolean = False
+                    else:
+                        count +=1
+            except:
+                raise KeyError
+            return vert_ant
+        else:
+            try:
+                while boolean:
+                    if not visit[count]:
+                        visit[count] = True
+                        if count not in vert_ant:
+                            vert_ant.append(count)
+                        for x in range(len(listaadj[count])):
+                            if listaadj[count][x][0] == vert:
+                                boolean = False
+                    else:
+                        count +=1
+            except:
+                raise KeyError
+            return vert_ant
