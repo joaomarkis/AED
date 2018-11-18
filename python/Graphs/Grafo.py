@@ -1,3 +1,14 @@
+"""""
+Universidade Federal de Pernambuco - UFPE
+Centro de Informática - CIn
+IF969 - 2018.2
+Autor: João Victor Marques dos Santos
+E-mail: jvms@cin.ufpe.br
+                Classes de Grafo por lista/matriz e funções de busca (dfs/bfs)
+
+                       Copyright(c) 2018 João Victor Marques dos Santos
+"""""
+
 import numpy as np
 
 class GrafoLista:
@@ -374,3 +385,4 @@ def bfs(graph, vert):
             except:
                 raise KeyError
             return vert_ant
+#falta terminar
