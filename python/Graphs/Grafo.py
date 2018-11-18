@@ -1,4 +1,14 @@
 import numpy as np
+"""""
+Universidade Federal de Pernambuco - UFPE
+Centro de Informática - CIn
+IF969 - 2018.2
+Autor: João Victor Marques dos Santos
+E-mail: jvms@cin.ufpe.br
+                Classes de Grafo por lista/matriz e funções de busca (dfs/bfs)
+
+                       Copyright(c) 2018 João Victor Marques dos Santos
+"""""
 
 class GrafoLista:
     def __init__(self, grupo, direcionado=False):
