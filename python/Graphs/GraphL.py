@@ -188,3 +188,155 @@ class GrafoLista:
                 return False
             else:
                 return True
+def dfs(graph):
+    '''
+    Função que faz uma busca em profundidade do Grafo
+    :param graph: Grafo a ser efetuado a busca
+    :return: uma lista com todos os vértices antecessores em ordem de pesquisa
+    '''
+    status = graph.typegraph
+    #Se o grafo for GrafoMatriz, será status ==0, caso não, entrará no else e irá ocorrer uma busca para o GrafoLista
+    if status == 0:
+        matriz_copia = np.array(graph.matriz)
+        aux = 0
+        visit = [False] * graph.V
+        boolean = True
+        vert_ant = []
+        antecessor = 0
+        adj = 0
+        while boolean:
+            count = 0
+            if not visit[aux]:
+                visit[aux] = True
+                if aux not in vert_ant:
+                    vert_ant.append(aux)
+                for x in range(len(matriz_copia)):
+                    if matriz_copia[aux][x] > 0:
+                        count += 1
+                        adj = x
+                        matriz_copia[aux][x] = -1
+                if count == 0:
+                    aux = antecessor
+                else:
+                    antecessor = aux
+                    aux = adj
+            else:
+                antecessor -= 1
+                aux = antecessor
+            if antecessor == -1:
+                boolean = False
+                return vert_ant
+    else:
+        listaadj = graph.listaadj
+        aux = 0
+        size = graph.V
+
+        visit = [False] * size
+        boolean = True
+        vert_ant = []
+        antecessor = 0
+        adj = 0
+        if graph.weight:
+            while boolean:
+                count = 0
+                if not visit[aux]:
+                    visit[aux] = True
+                    if aux not in vert_ant:
+                        vert_ant.append(aux)
+                    for x in range(len(listaadj[aux])):
+                        count += 1
+                        adj = listaadj[aux][x][0]
+                    antecessor = aux
+                    aux = adj
+                else:
+                    antecessor -= 1
+                    aux = antecessor
+                if antecessor == -1:
+                    boolean = False
+                    return vert_ant
+        else:
+            while boolean:
+                count = 0
+                if not visit[aux]:
+                    visit[aux] = True
+                    if aux not in vert_ant:
+                        vert_ant.append(aux)
+                    for x in range(len(listaadj[aux])):
+                        count += 1
+                        adj = listaadj[aux][x]
+                    antecessor = aux
+                    aux = adj
+                else:
+                    antecessor -= 1
+                    aux = antecessor
+                if antecessor == -1:
+                    boolean = False
+                    return vert_ant
+def bfs(graph, vert):
+    '''
+    Função que realize uma busca em largura no grafo na tentativa de achar um vértice dado como parametro
+    :param graph: Grafo a ser lido na busca
+    :param vert: Vértice que será utilizado como parametro na busca
+    :return: Retorna a lista de vértices que foi checado para achar o vértice em questão, caso dê erro será levantado um Value Error
+    '''
+    status = graph.typegraph
+    #Status == 0 será GrafoMatriz, else entrará no GrafoLista
+    if status == 0:
+        boolean = True
+        count = 0
+        visit = [False]*graph.V
+        vert_ant = []
+        try:
+            while boolean:
+                if not visit[count]:
+                    visit[count] = True
+                    if count not in vert_ant:
+                        vert_ant.append(count)
+                    for x in range(len(graph.matriz)):
+                        if graph.matriz[count][x] >0:
+                            if x == vert:
+                                boolean = False
+                else:
+                    count +=1
+        except:
+            raise ValueError
+        return vert_ant
+    else:
+        listaadj = graph.listaadj
+        size = graph.V
+        visit = [False] * size
+        boolean = True
+        vert_ant = []
+        antecessor = 0
+        adj = 0
+        count = 0
+        if graph.weight:
+            try:
+                while boolean:
+                    if not visit[count]:
+                        visit[count] = True
+                        if count not in vert_ant:
+                            vert_ant.append(count)
+                        for x in range(len(listaadj[count])):
+                            if listaadj[count][x][0] == vert:
+                                boolean = False
+                    else:
+                        count +=1
+            except:
+                raise ValueError
+            return vert_ant
+        else:
+            try:
+                while boolean:
+                    if not visit[count]:
+                        visit[count] = True
+                        if count not in vert_ant:
+                            vert_ant.append(count)
+                        for x in range(len(listaadj[count])):
+                            if listaadj[count][x][0] == vert:
+                                boolean = False
+                    else:
+                        count +=1
+            except:
+                raise ValueError
+            return vert_ant
